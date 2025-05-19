@@ -7,19 +7,19 @@
 # - sudo usermod -a -G libvirt-qemu $(whoami)
 
 ENV["VAGRANT_DEFAULT_PROVIDER"] = "libvirt"
+PROJETO = "cansei"
 
 # Definição dos nodes com seus IPs e recursos
 nodes = {
-  "bal01"        => { "ip" => "172.28.0.11", "memory" => 512, "cpus" => 1 },
-  "app01"        => { "ip" => "172.28.0.12", "memory" => 512, "cpus" => 2 },
-  "app02"        => { "ip" => "172.28.0.12", "memory" => 512, "cpus" => 2 },
-  "sip01"        => { "ip" => "172.28.0.12", "memory" => 512, "cpus" => 1 },
-  "mysql01"      => { "ip" => "172.28.0.13", "memory" => 512, "cpus" => 2 },
-  "repo01"       => { "ip" => "172.28.0.14", "memory" => 512, "cpus" => 1 },
-
-  "solr01"       => { "ip" => "172.28.0.14", "memory" => 512, "cpus" => 2 },
-  "jod01"        => { "ip" => "172.28.0.14", "memory" => 512, "cpus" => 1 },
-  "memcached01"  => { "ip" => "172.28.0.15", "memory" => 512, "cpus" => 1 }
+  "bal01"        => { "ip" => "172.29.0.11", "memory" => 512, "cpus" => 1 },
+  "app01"        => { "ip" => "172.29.0.21", "memory" => 512, "cpus" => 1 },
+  "app02"        => { "ip" => "172.29.0.22", "memory" => 512, "cpus" => 1 },
+  "sip01"        => { "ip" => "172.29.0.25", "memory" => 512, "cpus" => 1 },
+  "memcached01"  => { "ip" => "172.29.0.31", "memory" => 512, "cpus" => 1 },
+  "repo01"       => { "ip" => "172.29.0.32", "memory" => 512, "cpus" => 1 },
+  "solr01"       => { "ip" => "172.29.0.33", "memory" => 512, "cpus" => 1 },
+  "jod01"        => { "ip" => "172.29.0.34", "memory" => 512, "cpus" => 1 },
+  "postgres01"      => { "ip" => "172.29.0.41", "memory" => 512, "cpus" => 1 }
 }
 
 Vagrant.configure("2") do |config|
@@ -65,9 +65,10 @@ Vagrant.configure("2") do |config|
       node.vm.network "private_network", ip: specs["ip"]
 
       # Sobrescreve as configurações de memória e CPU para cada VM
-      node.vm.provider :libvirt do |libvirt|
-        libvirt.memory = specs["memory"]
-        libvirt.cpus = specs["cpus"]
+      node.vm.provider :libvirt do |libvirt_host|
+        libvirt_host.default_prefix = "#{PROJETO}-"
+        libvirt_host.memory = specs["memory"]
+        libvirt_host.cpus = specs["cpus"]
       end
 
       # Adiciona a chave pública se ela não existir
